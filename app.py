@@ -6,15 +6,16 @@ from flask_socketio import SocketIO
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-db = {"requests": [], "responses": {}}
+# db = {"requests": [], "responses": {}}
+db = []
 request_queues = {}
 
 
 @app.route('/new-request', methods=['POST'])
 def new_request():
     data = request.json
-    request_id = len(db["requests"]) + 1
-    db["requests"].append({"id": request_id, "data": data, "status": "pending"})
+    request_id = len(db)
+    db.append({"id": request_id, "request": data, "response": None})
 
     # Create a queue for this request
     request_queues[request_id] = Queue()
@@ -24,6 +25,7 @@ def new_request():
 
     # Wait for the admin's response
     response = request_queues[request_id].get()  # This will block until an item is put in the queue
+    db[request_id]["response"] = response
 
     return jsonify({"id": request_id, "response": response})
 
