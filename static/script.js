@@ -9,6 +9,7 @@ function fetchRequests() {
                 if (!document.getElementById(`request-${request.id}`)) {
                     const requestElement = document.createElement('div');
                     requestElement.id = `request-${request.id}`;
+                    requestElement.className = 'request-item';
                     requestElement.innerHTML = `
                         <p>Request ID ${request.id}: ${JSON.stringify(request.data)}</p>
                         <textarea id="response-${request.id}" placeholder="Type your response here"></textarea>
