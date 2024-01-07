@@ -36,9 +36,21 @@ function submitResponse(requestId) {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
-        // Optionally, refresh the list or indicate that the response was successful
+
+        // Update the UI to indicate the response was submitted
+        const responseArea = document.getElementById(`response-${requestId}`);
+        const submitButton = responseArea.nextSibling; // Assuming the button is the next sibling
+
+        responseArea.disabled = true; // Disable the textarea
+        responseArea.style.backgroundColor = '#f0f0f0'; // Change background to indicate disabled state
+        submitButton.disabled = true; // Disable the submit button
+        submitButton.textContent = 'Submitted'; // Change button text
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        // Optionally, provide feedback about the error
+    });
 }
+
 
 document.addEventListener('DOMContentLoaded', fetchRequests);
