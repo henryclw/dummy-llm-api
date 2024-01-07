@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
@@ -12,7 +14,19 @@ def new_request():
     data = request.json
     request_id = len(db["requests"]) + 1
     db["requests"].append({"id": request_id, "data": data, "status": "pending"})
-    return jsonify({"message": "Request received", "id": request_id})
+
+    # Long polling: Wait for admin response
+    start_time = time.time()
+    while True:
+        if request_id in db["responses"]:
+            response = db["responses"][request_id]
+            return jsonify({"id": request_id, "response": response})
+
+        # Break after a timeout (e.g., 30 seconds) to avoid hanging indefinitely
+        if time.time() - start_time > 30:
+            return jsonify({"id": request_id, "message": "Response pending", "status": "timeout"}), 202
+
+        time.sleep(1)  # Sleep to prevent busy waiting
 
 
 @app.route('/admin/requests', methods=['GET'])
