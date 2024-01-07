@@ -12,9 +12,10 @@ socket.on('new_request', function(newRequest) {
     requestElement.id = `request-${newRequest.id}`;
     requestElement.className = 'request-item';
     requestElement.innerHTML = `
-        <p>Request ID ${newRequest.id}: ${JSON.stringify(newRequest.data)}</p>
+        <p id="request-${newRequest.id}-text">Request ID ${newRequest.id}: ${JSON.stringify(newRequest.data)}</p>
         <textarea id="response-${newRequest.id}" placeholder="Type your response here"></textarea>
         <button id="submit-button-${newRequest.id}" onclick="submitResponse(${newRequest.id})">Submit Response</button>
+        <button onclick="copyToClipboard('request-${newRequest.id}-text')">Copy to Clipboard</button>
     `;
     listElement.appendChild(requestElement);
 });
@@ -63,4 +64,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
+function copyToClipboard(elementId) {
+    // Create a temporary textarea element
+    var tempElement = document.createElement("textarea");
+    tempElement.style.position = "absolute";
+    tempElement.style.left = "-9999px";
+    tempElement.setAttribute("readonly", ""); // Prevent keyboard from showing on mobile
+
+    // Get the text from the request div and put it in the textarea
+    var text = document.getElementById(elementId).innerText;
+    tempElement.value = text;
+
+    // Append the textarea to the body, copy its content, and remove it
+    document.body.appendChild(tempElement);
+    tempElement.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempElement);
+
+}
 
