@@ -1,51 +1,59 @@
-import time
+from queue import Queue
 
 from flask import Flask, request, jsonify, render_template
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
-# Define your routes here
-
-db = {"requests": [], "responses": {}}
+# db = {"requests": [], "responses": {}}
+db = []
+request_queues = {}
 
 
 @app.route('/new-request', methods=['POST'])
 def new_request():
     data = request.json
-    request_id = len(db["requests"]) + 1
-    db["requests"].append({"id": request_id, "data": data, "status": "pending"})
+    request_id = len(db)
+    db.append({"id": request_id, "request": data, "response": None})
 
-    # Long polling: Wait for admin response
-    start_time = time.time()
-    while True:
-        if request_id in db["responses"]:
-            response = db["responses"][request_id]
-            return jsonify({"id": request_id, "response": response})
+    # Create a queue for this request
+    request_queues[request_id] = Queue()
 
-        # Break after a timeout (e.g., 30 seconds) to avoid hanging indefinitely
-        if time.time() - start_time > 30:
-            return jsonify({"id": request_id, "message": "Response pending", "status": "timeout"}), 202
+    # Notify admin
+    socketio.emit('new_request', {"id": request_id, "data": data, "status": "pending"})
 
-        time.sleep(1)  # Sleep to prevent busy waiting
+    # Wait for the admin's response
+    response = request_queues[request_id].get()  # This will block until an item is put in the queue
+    db[request_id]["response"] = response
+
+    return jsonify({"id": request_id, "response": response})
 
 
-@app.route('/admin/requests', methods=['GET'])
+@app.route('/admin/view_all', methods=['GET'])
 def view_requests():
-    return jsonify(db["requests"])
+    return jsonify(db)
 
 
+# Admin response endpoint
 @app.route('/admin/respond', methods=['POST'])
-def respond():
+def admin_respond():
     response_data = request.json
     request_id = response_data["request_id"]
     response = response_data["response"]
 
-    # Update the request status and store the response
-    for req in db["requests"]:
-        if req["id"] == request_id:
-            req["status"] = "completed"
-            break
-    db["responses"][request_id] = response
+    # # Update the request status and store the response
+    # for req in db["requests"]:
+    #     if req["id"] == request_id:
+    #         req["status"] = "completed"
+    #         break
+    # db["responses"][request_id] = response
+
+    # Put the admin's response in the corresponding request's queue
+    if request_id in request_queues:
+        request_queues[request_id].put(response)
+        del request_queues[request_id]  # Remove the queue as it's no longer needed
+
     return jsonify({"message": "Response recorded"})
 
 
@@ -55,4 +63,4 @@ def admin_portal():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, log_output=True, use_reloader=False, allow_unsafe_werkzeug=True)
