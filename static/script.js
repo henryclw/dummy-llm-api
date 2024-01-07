@@ -1,29 +1,24 @@
-function fetchRequests() {
-    fetch('/admin/requests')
-        .then(response => response.json())
-        .then(requests => {
-            const listElement = document.getElementById('request-list');
+const socket = io.connect('http://' + document.domain + ':' + location.port);
 
-            requests.forEach(request => {
-                // Check if this request is already displayed
-                if (!document.getElementById(`request-${request.id}`)) {
-                    const requestElement = document.createElement('div');
-                    requestElement.id = `request-${request.id}`;
-                    requestElement.className = 'request-item';
-                    requestElement.innerHTML = `
-                        <p>Request ID ${request.id}: ${JSON.stringify(request.data)}</p>
-                        <textarea id="response-${request.id}" placeholder="Type your response here"></textarea>
-                        <button id="submit-button-${request.id}" onclick="submitResponse(${request.id})">Submit Response</button>
-                    `;
-                    listElement.appendChild(requestElement);
-                }
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
 
-// Poll for new requests every 0.5 seconds
-setInterval(fetchRequests, 500);
+socket.on('connect', function() {
+    console.log('Websocket connected!');
+});
+
+
+socket.on('new_request', function(newRequest) {
+    const listElement = document.getElementById('request-list');
+    const requestElement = document.createElement('div');
+    requestElement.id = `request-${newRequest.id}`;
+    requestElement.className = 'request-item';
+    requestElement.innerHTML = `
+        <p>Request ID ${newRequest.id}: ${JSON.stringify(newRequest.data)}</p>
+        <textarea id="response-${newRequest.id}" placeholder="Type your response here"></textarea>
+        <button id="submit-button-${newRequest.id}" onclick="submitResponse(${newRequest.id})">Submit Response</button>
+    `;
+    listElement.appendChild(requestElement);
+});
+
 
 function submitResponse(requestId) {
     const responseText = document.getElementById(`response-${requestId}`).value;
@@ -51,7 +46,6 @@ function submitResponse(requestId) {
     .catch(error => console.error('Error:', error));
 }
 
-document.addEventListener('DOMContentLoaded', fetchRequests);
 
 document.addEventListener('DOMContentLoaded', function() {
     // Set dark mode by default
