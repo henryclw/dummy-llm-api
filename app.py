@@ -1,4 +1,3 @@
-import time
 from queue import Queue
 
 from flask import Flask, request, jsonify, render_template
@@ -6,8 +5,6 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 socketio = SocketIO(app)
-
-# Define your routes here
 
 db = {"requests": [], "responses": {}}
 request_queues = {}
@@ -31,9 +28,9 @@ def new_request():
     return jsonify({"id": request_id, "response": response})
 
 
-@app.route('/admin/requests', methods=['GET'])
+@app.route('/admin/view_all', methods=['GET'])
 def view_requests():
-    return jsonify(db["requests"])
+    return jsonify(db)
 
 
 # Admin response endpoint
@@ -64,5 +61,4 @@ def admin_portal():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    socketio.run(app)
+    socketio.run(app, log_output=True, use_reloader=False, allow_unsafe_werkzeug=True)
