@@ -12,7 +12,7 @@ function fetchRequests() {
                     requestElement.innerHTML = `
                         <p>Request ID ${request.id}: ${JSON.stringify(request.data)}</p>
                         <textarea id="response-${request.id}" placeholder="Type your response here"></textarea>
-                        <button onclick="submitResponse(${request.id})">Submit Response</button>
+                        <button id="submit-button-${request.id}" onclick="submitResponse(${request.id})">Submit Response</button>
                     `;
                     listElement.appendChild(requestElement);
                 }
@@ -37,19 +37,18 @@ function submitResponse(requestId) {
     .then(data => {
         console.log('Success:', data);
 
-        // Update the UI to indicate the response was submitted
+        // Disable the textarea
         const responseArea = document.getElementById(`response-${requestId}`);
-        const submitButton = responseArea.nextSibling; // Assuming the button is the next sibling
+        responseArea.disabled = true;
+        responseArea.style.backgroundColor = '#f0f0f0';
 
-        responseArea.disabled = true; // Disable the textarea
-        responseArea.style.backgroundColor = '#f0f0f0'; // Change background to indicate disabled state
-        submitButton.disabled = true; // Disable the submit button
-        submitButton.textContent = 'Submitted'; // Change button text
+        // Hide the submit button
+        const submitButton = document.getElementById(`submit-button-${requestId}`);
+        if (submitButton) {
+            submitButton.style.display = 'none';
+        }
     })
-    .catch(error => {
-        console.error('Error:', error);
-        // Optionally, provide feedback about the error
-    });
+    .catch(error => console.error('Error:', error));
 }
 
 
