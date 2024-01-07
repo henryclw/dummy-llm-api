@@ -26,7 +26,7 @@ def new_request():
         if time.time() - start_time > 30:
             return jsonify({"id": request_id, "message": "Response pending", "status": "timeout"}), 202
 
-        time.sleep(1)  # Sleep to prevent busy waiting
+        time.sleep(500)  # Sleep to prevent busy waiting
 
 
 @app.route('/admin/requests', methods=['GET'])
