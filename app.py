@@ -62,4 +62,4 @@ def admin_portal():
 
 
 if __name__ == '__main__':
-    socketio.run(app, log_output=True, use_reloader=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, host="0.0.0.0", log_output=True, use_reloader=False, allow_unsafe_werkzeug=True)
