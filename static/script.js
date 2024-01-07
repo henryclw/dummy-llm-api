@@ -54,11 +54,20 @@ function submitResponse(requestId) {
 
 document.addEventListener('DOMContentLoaded', fetchRequests);
 
-document.getElementById('theme-switch-checkbox').addEventListener('change', function(event) {
-    if (event.target.checked) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    // Set dark mode by default
+    document.body.classList.add('dark-mode');
+    document.getElementById('theme-switch-button').textContent = 'Switch to Light Theme';
+
+    document.getElementById('theme-switch-button').addEventListener('click', function() {
+        if (document.body.classList.contains('dark-mode')) {
+            document.body.classList.remove('dark-mode');
+            this.textContent = 'Switch to Dark Theme';
+        } else {
+            document.body.classList.add('dark-mode');
+            this.textContent = 'Switch to Light Theme';
+        }
+    });
 });
+
 

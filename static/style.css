@@ -93,4 +93,5 @@ body.dark-mode button:hover {
     position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 1000; /* Ensure it's above other elements */
 }
