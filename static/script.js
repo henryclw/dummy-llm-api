@@ -1,10 +1,17 @@
 function fetchRequests() {
     fetch('/admin/requests')
-    .then(response => response.json())
-    .then(data => {
-        // Process and display requests in the admin portal
-    });
+        .then(response => response.json())
+        .then(requests => {
+            const listElement = document.getElementById('request-list');
+            listElement.innerHTML = ''; // Clear current list
+
+            requests.forEach(request => {
+                const requestElement = document.createElement('div');
+                requestElement.textContent = `Request ID ${request.id}: ${JSON.stringify(request.data)}`;
+                listElement.appendChild(requestElement);
+            });
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-// Call this function to load requests on page load
-fetchRequests();
+document.addEventListener('DOMContentLoaded', fetchRequests);
