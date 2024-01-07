@@ -1,33 +1,40 @@
-body {
-    font-family: Arial, sans-serif;
+/* Basic Reset */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f4;
     color: #333;
+    line-height: 1.6;
 }
 
 h1 {
     background-color: #007bff;
     color: white;
     text-align: center;
-    padding: 10px 0;
+    padding: 20px 0;
+    margin-bottom: 20px;
 }
 
 #request-list {
-    margin: 20px;
+    margin: 20px auto;
     padding: 20px;
+    max-width: 800px;
     background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .request-item {
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
-}
-
-.request-item:last-child {
-    border-bottom: none;
+    background-color: #fff;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #007bff;
 }
 
 textarea {
@@ -36,19 +43,54 @@ textarea {
     margin-top: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+    min-height: 100px;
 }
 
 button {
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     margin-top: 10px;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;
 }
 
 button:disabled {
     background-color: #ccc;
+}
+
+/* Dark Theme Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode #request-list {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+body.dark-mode .request-item {
+    background-color: #252525;
+    border-left-color: #1b6ec2;
+}
+
+body.dark-mode button {
+    background-color: #1b6ec2;
+}
+
+body.dark-mode button:hover {
+    background-color: #1861ac;
+}
+
+.theme-switch {
+    position: fixed;
+    top: 20px;
+    right: 20px;
 }

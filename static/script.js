@@ -52,5 +52,13 @@ function submitResponse(requestId) {
     .catch(error => console.error('Error:', error));
 }
 
-
 document.addEventListener('DOMContentLoaded', fetchRequests);
+
+document.getElementById('theme-switch-checkbox').addEventListener('change', function(event) {
+    if (event.target.checked) {
+        document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
+    }
+});
+
