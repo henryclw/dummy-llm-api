@@ -6,12 +6,11 @@ from flask_socketio import SocketIO
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-# db = {"requests": [], "responses": {}}
 db = []
 request_queues = {}
 
 
-@app.route('/new-request', methods=['POST'])
+@app.route('/v1/chat/completions', methods=['POST'])
 def new_request():
     data = request.json
     request_id = len(db)
