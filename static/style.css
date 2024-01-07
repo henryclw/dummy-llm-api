@@ -46,6 +46,13 @@ textarea {
     min-height: 100px;
 }
 
+/* Styles for disabled textareas in light mode */
+textarea:disabled {
+    background-color: #e9ecef;  /* Light gray background */
+    color: #6c757d;             /* Darker text color for readability */
+    border: 1px solid #ced4da;  /* Light border */
+}
+
 button {
     background-color: #28a745;
     color: white;
@@ -97,6 +104,12 @@ body.dark-mode textarea {
 
 body.dark-mode textarea::placeholder {
     color: #bbb;
+}
+
+body.dark-mode textarea:disabled {
+    background-color: #2a2a2a;  /* Darker background for disabled textarea */
+    color: #777;               /* Lighter text color for readability */
+    border: 1px solid #444;    /* Dark border */
 }
 
 .theme-switch {

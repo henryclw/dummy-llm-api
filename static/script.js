@@ -41,7 +41,6 @@ function submitResponse(requestId) {
         // Disable the textarea
         const responseArea = document.getElementById(`response-${requestId}`);
         responseArea.disabled = true;
-        responseArea.style.backgroundColor = '#f0f0f0';
 
         // Hide the submit button
         const submitButton = document.getElementById(`submit-button-${requestId}`);
