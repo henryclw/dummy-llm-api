@@ -3,20 +3,26 @@ function fetchRequests() {
         .then(response => response.json())
         .then(requests => {
             const listElement = document.getElementById('request-list');
-            listElement.innerHTML = ''; // Clear current list
 
             requests.forEach(request => {
-                const requestElement = document.createElement('div');
-                requestElement.innerHTML = `
-                    <p>Request ID ${request.id}: ${JSON.stringify(request.data)}</p>
-                    <textarea id="response-${request.id}" placeholder="Type your response here"></textarea>
-                    <button onclick="submitResponse(${request.id})">Submit Response</button>
-                `;
-                listElement.appendChild(requestElement);
+                // Check if this request is already displayed
+                if (!document.getElementById(`request-${request.id}`)) {
+                    const requestElement = document.createElement('div');
+                    requestElement.id = `request-${request.id}`;
+                    requestElement.innerHTML = `
+                        <p>Request ID ${request.id}: ${JSON.stringify(request.data)}</p>
+                        <textarea id="response-${request.id}" placeholder="Type your response here"></textarea>
+                        <button onclick="submitResponse(${request.id})">Submit Response</button>
+                    `;
+                    listElement.appendChild(requestElement);
+                }
             });
         })
         .catch(error => console.error('Error:', error));
 }
+
+// Poll for new requests every 0.5 seconds
+setInterval(fetchRequests, 500);
 
 function submitResponse(requestId) {
     const responseText = document.getElementById(`response-${requestId}`).value;
