@@ -6,12 +6,11 @@ from flask_socketio import SocketIO
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-# db = {"requests": [], "responses": {}}
 db = []
 request_queues = {}
 
 
-@app.route('/new-request', methods=['POST'])
+@app.route('/v1/chat/completions', methods=['POST'])
 def new_request():
     data = request.json
     request_id = len(db)
@@ -27,7 +26,32 @@ def new_request():
     response = request_queues[request_id].get()  # This will block until an item is put in the queue
     db[request_id]["response"] = response
 
-    return jsonify({"id": request_id, "response": response})
+    fake_gpt_response = {
+        "id": "chatcmpl-8eL7U3TlVBwCQbjWjpDpFN3C5a7ff",
+        "object": "chat.completion",
+        "created": 1704624996,
+        "model": "gpt-3.5-turbo-0613",
+        "choices": [
+            {
+                "index": 0,
+                "message": {
+                    "role": "assistant",
+                    "content": "Passion, adoration, affection, infatuation, devotion"
+                },
+                "logprobs": None,
+                "finish_reason": "stop"
+            }
+        ],
+        "usage": {
+            "prompt_tokens": 33,
+            "completion_tokens": 13,
+            "total_tokens": 46
+        },
+        "system_fingerprint": None
+    }
+    fake_gpt_response["choices"][0]["message"]["content"] = response
+
+    return jsonify(fake_gpt_response)
 
 
 @app.route('/admin/view_all', methods=['GET'])
@@ -63,4 +87,4 @@ def admin_portal():
 
 
 if __name__ == '__main__':
-    socketio.run(app, log_output=True, use_reloader=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, host="0.0.0.0", log_output=True, use_reloader=False, allow_unsafe_werkzeug=True)
