@@ -19,6 +19,8 @@ socket.on('new_request', function (newRequest) {
         <button onclick="copyToClipboard('request-${newRequest.id}-text')">Copy to Clipboard</button>
     `;
     listElement.appendChild(requestElement);
+    const elem = document.getElementById(`request-${newRequest.id}-text`);
+    elem.innerHTML = prettyPrintJson.toHtml(newRequest.data);
 });
 
 

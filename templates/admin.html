@@ -6,6 +6,7 @@
     <title>Admin Portal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" crossorigin="anonymous"></script>
+
 </head>
 <body>
     <h1>Admin Portal</h1>
@@ -17,5 +18,8 @@
         <!-- Requests will be loaded here -->
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <link rel=stylesheet href=https://cdn.jsdelivr.net/npm/pretty-print-json@2.1/dist/css/pretty-print-json.css>
+    <script src=https://cdn.jsdelivr.net/npm/pretty-print-json@2.1/dist/pretty-print-json.min.js></script>
 </body>
 </html>
